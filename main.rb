@@ -10,17 +10,20 @@ set :database, {
               :host => 'localhost'
 }
 
-class CreateHouses < ActiveRecord::Base
+class House < ActiveRecord::Base
+  has_many :people
 end
 
+class Person < ActiveRecord::Base
+  belongs_to :house
+end
 
 get '/' do
-  erb :index
+  redirect to('/houses')
 end
 
 get '/houses' do
-  sql = "SELECT * FROM houses"
-  @houses = run_sql(sql)
+ @houses = House.all
   erb :houses
 end
 
@@ -29,12 +32,8 @@ get '/houses/new' do
 end
 
 post '/houses/new' do
-  name = params[:name]
-  sigil = params[:sigil]
-  motto = params[:motto]
-  sql = "INSERT INTO houses (name, sigil, motto) VALUES ('#{name}','#{sigil}','#{motto}');"
-  run_sql(sql)
-  redirect to '/houses'
+  house = House.create(params)
+  redirect to "houses/#{house.id}"
 end
 
 get '/people/new' do
