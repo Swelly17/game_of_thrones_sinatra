@@ -4,11 +4,11 @@ class CreateHouses < ActiveRecord::Migration
       t.string :name
       t.string :sigil
       t.string :motto
-
       t.timestamps
     end
   end
 
   def down
+    drop_table :houses
   end
 end
