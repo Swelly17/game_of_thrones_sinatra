@@ -2,16 +2,17 @@ require 'pg'
 require 'pry'
 require 'sinatra'
 require 'sinatra/reloader' if development?
+require 'sinatra/activerecord'
 
-helpers do
-  # This helps us run SQL commands
-  def run_sql(sql)
-    db = PG.connect(dbname: 'westeros', host: 'localhost')
-    result = db.exec(sql)
-    db.close
-    result
-  end
+set :database, {
+              :adapter => 'postgresql',
+              :database => 'westeros',
+              :host => 'localhost'
+}
+
+class CreateHouses < ActiveRecord::Base
 end
+
 
 get '/' do
   erb :index
